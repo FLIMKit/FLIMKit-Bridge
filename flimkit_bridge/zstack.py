@@ -21,6 +21,8 @@ SCHEMA = (
      'default': False},
     {'key': 'correct_pileup', 'label': 'Correct pile-up', 'type': 'bool',
      'default': False},
+    {'key': 'estimator', 'label': 'Fixed-tau amplitude estimator', 'type': 'choice',
+     'choices': ('poisson', 'nnls'), 'default': 'poisson', 'advanced': True},
     {'key': 'volume_format', 'label': 'Volume format', 'type': 'choice',
      'choices': ('ome-zarr', 'ome-tiff'), 'default': 'ome-zarr'},
     {'key': 'channel', 'label': 'Channel', 'type': 'int', 'min': 0, 'max': 16,
@@ -152,6 +154,7 @@ def build_args(ptu_dir, output_dir, params):
     args.estimate_irf = params['irf_strategy']
     args.machine_irf = params['irf_path'] or str(MACHINE_IRF_DEFAULT_PATH)
     args.correct_pileup = bool(params['correct_pileup'])
+    args.estimator = params['estimator']
     args.channel = params['channel']
     args.bound_fraction = bool(params['bound_fraction'])
     args.ref_tau1 = params['ref_tau1_ns']

@@ -311,6 +311,31 @@ def test_per_pixel_uses_the_gpu_unless_it_is_turned_off():
     assert fitting.merge_params({'use_gpu': False})['use_gpu'] is False
 
 
+def test_estimator_defaults_to_poisson_and_takes_nnls():
+    assert fitting.defaults()['values']['estimator'] == 'poisson'
+    assert fitting.merge_params({'estimator': 'nnls'})['estimator'] == 'nnls'
+    with pytest.raises(ValueError):
+        fitting.merge_params({'estimator': 'bogus'})
+
+
+@pytest.mark.parametrize('estimator', ['poisson', 'nnls'])
+def test_the_estimator_reaches_fit_per_pixel(monkeypatch, estimator):
+    import flimkit.FLIM.fitters as fitters
+    seen = {}
+    real = fitters.fit_per_pixel
+
+    def spy(*args, **kwargs):
+        seen['estimator'] = kwargs.get('estimator')
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(fitters, 'fit_per_pixel', spy)
+    stack, _ = _synthetic_stack(shape=(4, 4), photons=40000)
+    params = fitting.merge_params({'n_exp': 2, 'irf_strategy': 'gaussian',
+                                   'use_gpu': False, 'estimator': estimator})
+    fitting.fit_pixels(stack, 5e-11, 256, params, bands=2)
+    assert seen['estimator'] == estimator
+
+
 def test_accepts_reports_a_missing_keyword():
     from flimkit_bridge.fitting import accepts
 

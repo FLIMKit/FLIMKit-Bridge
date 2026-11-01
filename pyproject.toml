@@ -11,7 +11,7 @@ requires-python = '>=3.12'
 license = 'MIT'
 authors = [{ name = 'Alex Hunt', email = 'alexander.hunt@ed.ac.uk' }]
 dependencies = [
-    'flimkit>=0.13.2',
+    'flimkit>=0.14.2',
     'numpy',
     'tifffile',
     'zarr>=2.16',

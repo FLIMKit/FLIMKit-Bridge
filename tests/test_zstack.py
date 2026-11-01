@@ -349,3 +349,10 @@ def test_a_name_with_xml_in_it_cannot_break_the_metadata(tmp_path):
     xml = (Path(written) / 'OME' / 'METADATA.ome.xml').read_text(encoding='utf-8')
     ElementTree.fromstring(xml)
     assert 'a&lt;b&amp;c&quot;d' in xml
+
+
+def test_the_zstack_passes_the_estimator_on():
+    assert zstack.defaults()['values']['estimator'] == 'poisson'
+    params = zstack.merge_params({'estimator': 'nnls'})
+    args = zstack.build_args('tiles', 'out', params)
+    assert args.estimator == 'nnls'
