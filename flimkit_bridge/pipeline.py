@@ -24,6 +24,8 @@ SCHEMA = (
      'type': 'int', 'min': 0, 'max': 2000, 'default': 120},
     {'key': 'correct_pileup', 'label': 'Correct pile-up', 'type': 'bool',
      'default': False},
+    {'key': 'estimator', 'label': 'Fixed-tau amplitude estimator', 'type': 'choice',
+     'choices': ('poisson', 'nnls'), 'default': 'poisson', 'advanced': True},
     {'key': 'channel', 'label': 'Channel', 'type': 'int', 'min': 0, 'max': 16,
      'default': None, 'advanced': True},
     {'key': 'pipeline', 'label': 'Pipeline', 'type': 'choice',
@@ -171,6 +173,7 @@ def build_args(container, tile_dir, output_dir, basename, params):
     args.estimate_irf = params['irf_strategy']
     args.machine_irf = params['irf_path'] or str(MACHINE_IRF_DEFAULT_PATH)
     args.correct_pileup = bool(params['correct_pileup'])
+    args.estimator = params['estimator']
     args.channel = params['channel']
     args.dist_type = 'discrete'
     args.mode = params['mode']

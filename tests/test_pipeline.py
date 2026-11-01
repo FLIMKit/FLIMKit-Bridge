@@ -163,3 +163,10 @@ def test_products_stay_float_when_counts_are_not_whole(tmp_path):
     written = tifffile.imread(products[0]['file'])
     assert written.dtype == np.float32
     assert np.array_equal(written, counts)
+
+
+def test_the_pipeline_passes_the_estimator_on():
+    assert pipeline.defaults()['values']['estimator'] == 'poisson'
+    params = pipeline.merge_params({'estimator': 'nnls'})
+    args = pipeline.build_args('c.xlif', 'tiles', 'out', 'base', params)
+    assert args.estimator == 'nnls'

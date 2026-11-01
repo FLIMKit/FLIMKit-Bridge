@@ -42,6 +42,9 @@ SCHEMA = (
      'applies_to': ('roi', 'per_pixel'), 'advanced': True, 'default': True},
     {'key': 'fit_sigma', 'label': 'Fit IRF broadening', 'type': 'bool',
      'applies_to': ('roi', 'per_pixel'), 'advanced': True, 'default': False},
+    {'key': 'estimator', 'label': 'Fixed-tau amplitude estimator', 'type': 'choice',
+     'choices': ('poisson', 'nnls'), 'applies_to': ('per_pixel',),
+     'advanced': True, 'default': 'poisson'},
     {'key': 'free_tau', 'label': 'Free tau per pixel', 'type': 'bool',
      'applies_to': ('per_pixel',), 'advanced': True, 'default': False},
     {'key': 'lm_restarts', 'label': 'LM restarts', 'type': 'int', 'min': 1,
@@ -362,6 +365,7 @@ def fit_pixels(stack, tcspc_res, n_bins, params, irf_prompt=None, bands=8,
             use_gpu='auto' if params.get('use_gpu', True) else False,
             fit_model=fit_model,
             free_tau=bool(params.get('free_tau', False)),
+            estimator=params.get('estimator', 'poisson'),
             **pileup,
         )
         collected.append(maps)
